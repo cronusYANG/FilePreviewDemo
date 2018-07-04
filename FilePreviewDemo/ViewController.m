@@ -14,6 +14,7 @@
 #define WIDTH CGRectGetWidth([UIScreen mainScreen].bounds)
 #define HEIGHT CGRectGetHeight([UIScreen mainScreen].bounds)
 #define Dic_Path [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]
+#define TempName @"noName"
 
 @interface ViewController ()<QLPreviewControllerDelegate,QLPreviewControllerDataSource,DowloadStateDelegate>
 @property(strong,nonatomic) MBProgressHUD *hud;
@@ -40,8 +41,7 @@
     self.textView = [[UITextView alloc] initWithFrame:CGRectMake(25, 85, WIDTH-50, 100)];
     [self.textView setBackgroundColor:[UIColor whiteColor]];
     self.textView.font = [UIFont systemFontOfSize:15];
-    self.textView.text = @"http://159.69.18.123/download/book/854918?token=b6623f91-a8c7-4d13-90a8-00268f0c365b";
-    self.fileName = @"Hamlet.pdf";
+    self.textView.text = @"输入下载链接";
     [self.view addSubview:self.textView];
  
     UIButton *btn = [[UIButton alloc] init];
@@ -57,7 +57,7 @@
 
 -(void)btnClick{
 
-    NSString *path = [NSString stringWithFormat:@"%@/%@",Dic_Path,self.fileName];
+    NSString *path = [NSString stringWithFormat:@"%@/%@",Dic_Path,TempName];
     NSURL *url;
     if (self.textView.text.length) {
         url = [NSURL URLWithString:self.textView.text];
@@ -75,6 +75,22 @@
     if (!error) {
         [self.hud hideAnimated:YES];
         
+        //*********获取到文件拓展名后复制文件以重命名并删除原有文件
+        NSString *name = [NSString stringWithFormat:@"%06d", arc4random() % 100000];
+        NSString *ext = [[response.MIMEType componentsSeparatedByString:@"/"] lastObject];
+        self.fileName = [NSString stringWithFormat:@"%@.%@",name,ext];
+        NSFileManager *fileManage = [NSFileManager defaultManager];
+        NSString *filePath = [NSString stringWithFormat:@"%@/%@",Dic_Path,TempName];
+        NSString *toFilePath = [NSString stringWithFormat:@"%@/%@",Dic_Path,self.fileName];
+        if (![fileManage fileExistsAtPath:toFilePath]) {
+            BOOL isSuccess = [fileManage copyItemAtPath:filePath toPath:toFilePath error:nil];
+//            NSLog(@"%@",isSuccess ? @"拷贝成功" : @"拷贝失败");
+            if (isSuccess) {
+                 [fileManage removeItemAtPath:filePath error:nil];
+            }
+        }
+        //**********
+        
         QLPreviewController *qlController = [[QLPreviewController alloc]init];
         qlController.delegate = self;
         qlController.dataSource = self;
@@ -89,7 +105,7 @@
     }
 }
 
--(void)sandboxPath{//取沙盒路径
+-(void)sandboxPath{//沙盒路径
     NSString *path = NSHomeDirectory();
     NSLog(@"--------NSHomeDirectory: %@",path);
 }
