@@ -36,12 +36,12 @@
     
     [DownloadFile sharedInstance].delegate = self;
     
-//    [self sandboxPath];
+    [self sandboxPath];
     
     self.textView = [[UITextView alloc] initWithFrame:CGRectMake(25, 85, WIDTH-50, 100)];
     [self.textView setBackgroundColor:[UIColor whiteColor]];
     self.textView.font = [UIFont systemFontOfSize:15];
-    self.textView.text = @"输入下载链接";
+    self.textView.text = @"https://avatars0.githubusercontent.com/u/23354224?s=460&v=4";
     [self.view addSubview:self.textView];
  
     UIButton *btn = [[UIButton alloc] init];
@@ -91,18 +91,22 @@
         }
         //**********
         
-        QLPreviewController *qlController = [[QLPreviewController alloc]init];
-        qlController.delegate = self;
-        qlController.dataSource = self;
-        qlController.hidesBottomBarWhenPushed = YES;
-        qlController.currentPreviewItemIndex = 1;
-        [self presentViewController:qlController animated:YES completion:nil];
+        [self preview];
     }else{
 
         self.hud.mode = MBProgressHUDModeText;
         self.hud.label.text = [error localizedDescription];
         [self.hud hideAnimated:YES afterDelay:1.5];
     }
+}
+
+-(void)preview{
+    QLPreviewController *qlController = [[QLPreviewController alloc]init];
+    qlController.delegate = self;
+    qlController.dataSource = self;
+    qlController.hidesBottomBarWhenPushed = YES;
+    qlController.currentPreviewItemIndex = 1;
+    [self presentViewController:qlController animated:YES completion:nil];
 }
 
 -(void)sandboxPath{//沙盒路径
