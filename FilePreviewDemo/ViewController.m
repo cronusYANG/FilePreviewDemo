@@ -15,8 +15,6 @@
 #define HEIGHT CGRectGetHeight([UIScreen mainScreen].bounds)
 #define Dic_Path [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]
 
-
-
 @interface ViewController ()<QLPreviewControllerDelegate,QLPreviewControllerDataSource,DowloadStateDelegate>
 @property(strong,nonatomic) MBProgressHUD *hud;
 @property(strong,nonatomic) NSURLSessionDownloadTask *task;
@@ -37,7 +35,7 @@
     
     [DownloadFile sharedInstance].delegate = self;
     
-    [self sandboxPath];
+//    [self sandboxPath];
     
     self.textView = [[UITextView alloc] initWithFrame:CGRectMake(25, 85, WIDTH-50, 100)];
     [self.textView setBackgroundColor:[UIColor whiteColor]];

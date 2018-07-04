@@ -15,19 +15,6 @@
 
 @implementation AppDelegate
 
-- (UIViewController *) getCurrentViewController {
-    
-    UIApplication *application = [UIApplication sharedApplication];
-    AppDelegate *myAppDelegate = (AppDelegate *)[application delegate];
-    UIViewController *viewController;
-    if ([myAppDelegate.window.rootViewController isKindOfClass:[UITabBarController class]]) {
-        UITabBarController *tabbar = (UITabBarController *)myAppDelegate.window.rootViewController;
-        UINavigationController *nav = (UINavigationController *)tabbar.selectedViewController;
-        viewController = nav.visibleViewController;
-    }
-    return viewController;
-}
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
